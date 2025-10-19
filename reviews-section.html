@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nordic Globe - Asiakaspalautteet</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .reviews-section {
+            width: 100%;
+            max-width: 900px;
+            padding: 60px 20px;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 50px;
+            animation: fadeInDown 0.8s ease-out;
+        }
+
+        .section-badge {
+            display: inline-block;
+            background: rgba(78, 205, 196, 0.15);
+            color: #4ECDC4;
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(78, 205, 196, 0.3);
+        }
+
+        .section-title {
+            font-size: 42px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 15px;
+            line-height: 1.2;
+        }
+
+        .section-subtitle {
+            font-size: 18px;
+            color: #b0b0b0;
+            font-weight: 300;
+        }
+
+        .carousel-container {
+            position: relative;
+            overflow: hidden;
+            padding: 40px 80px;
+        }
+
+        .reviews-carousel {
+            position: relative;
+            min-height: 400px;
+        }
+
+        .review-card {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            opacity: 0;
+            transform: translateX(100px);
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: none;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 50px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .review-card.active {
+            opacity: 1;
+            transform: translateX(0);
+            pointer-events: auto;
+            position: relative;
+        }
+
+        .review-card.prev {
+            transform: translateX(-100px);
+            opacity: 0;
+        }
+
+        .review-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .company-logo {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #4ECDC4, #44A08D);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            font-weight: 700;
+            color: white;
+            flex-shrink: 0;
+            box-shadow: 0 10px 30px rgba(78, 205, 196, 0.3);
+        }
+
+        .company-info {
+            flex: 1;
+        }
+
+        .company-name {
+            font-size: 24px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 5px;
+        }
+
+        .company-type {
+            font-size: 14px;
+            color: #4ECDC4;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stars {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 25px;
+        }
+
+        .star {
+            font-size: 22px;
+            color: #FFD700;
+            text-shadow: 0 2px 8px rgba(255, 215, 0, 0.4);
+        }
+
+        .star.empty {
+            color: rgba(255, 215, 0, 0.2);
+        }
+
+        .review-text {
+            font-size: 18px;
+            line-height: 1.8;
+            color: #e0e0e0;
+            margin-bottom: 30px;
+            font-style: italic;
+            position: relative;
+            padding-left: 20px;
+            border-left: 3px solid #4ECDC4;
+        }
+
+        .review-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .service-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(78, 205, 196, 0.15);
+            color: #4ECDC4;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            border: 1px solid rgba(78, 205, 196, 0.3);
+        }
+
+        .service-icon {
+            font-size: 16px;
+        }
+
+        .review-date {
+            color: #999;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .carousel-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            pointer-events: none;
+            padding: 0 10px;
+        }
+
+        .nav-button {
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4ECDC4, #44A08D);
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            pointer-events: auto;
+            box-shadow: 0 8px 25px rgba(78, 205, 196, 0.3);
+            z-index: 10;
+        }
+
+        .nav-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 12px 35px rgba(78, 205, 196, 0.5);
+        }
+
+        .nav-button:active {
+            transform: scale(0.95);
+        }
+
+        .carousel-dots {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 40px;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .dot.active {
+            background: #4ECDC4;
+            box-shadow: 0 0 15px rgba(78, 205, 196, 0.6);
+            width: 14px;
+            height: 14px;
+        }
+
+        .dot:hover {
+            background: rgba(78, 205, 196, 0.5);
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .section-title {
+                font-size: 32px;
+            }
+
+            .carousel-container {
+                padding: 20px 50px;
+            }
+
+            .review-card {
+                padding: 30px;
+            }
+
+            .review-text {
+                font-size: 16px;
+            }
+
+            .nav-button {
+                width: 45px;
+                height: 45px;
+                font-size: 20px;
+            }
+
+            .carousel-nav {
+                padding: 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .section-title {
+                font-size: 26px;
+            }
+
+            .carousel-container {
+                padding: 20px 40px;
+            }
+
+            .review-card {
+                padding: 25px;
+            }
+
+            .company-logo {
+                width: 55px;
+                height: 55px;
+                font-size: 22px;
+            }
+
+            .company-name {
+                font-size: 20px;
+            }
+
+            .review-text {
+                font-size: 15px;
+                line-height: 1.6;
+            }
+
+            .nav-button {
+                width: 40px;
+                height: 40px;
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="reviews-section">
+        <div class="section-header">
+            <div class="section-badge">Tyytyväiset Asiakkaat</div>
+            <h2 class="section-title">Mitä Asiakkaamme Sanovat</h2>
+            <p class="section-subtitle">Ylpeänä palvelemme satoja tyytyväisiä asiakkaita ympäri Suomen</p>
+        </div>
+
+        <div class="carousel-container">
+            <div class="reviews-carousel" id="reviewsCarousel">
+                <!-- Reviews will be injected here by JavaScript -->
+            </div>
+
+            <div class="carousel-nav">
+                <button class="nav-button" id="prevBtn" aria-label="Edellinen arvostelu">‹</button>
+                <button class="nav-button" id="nextBtn" aria-label="Seuraava arvostelu">›</button>
+            </div>
+
+            <div class="carousel-dots" id="carouselDots">
+                <!-- Dots will be injected here by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Datos de reviews
+        const reviews = [
+            {
+                cliente: "Stockmann Oy",
+                tipo: "Kauppakeskus",
+                comentario: "Nordic Globe on tarjonnut meille erinomaista siivouspalvelua jo vuosia. Heidän ammattitaitonsa ja luotettavuutensa ovat ensiluokkaisia. Kauppakeskuksemme on aina moitteettoman puhdas!",
+                estrellas: 5,
+                fecha: "2 viikkoa sitten",
+                servicio: "Myymäläsiivous"
+            },
+            {
+                cliente: "Ravintola Savoy",
+                tipo: "Fine Dining",
+                comentario: "Keittiömme ja ravintolatilat ovat aina täydellisessä kunnossa. Nordic Globe ymmärtää hygienian tärkeyden ravintola-alalla. Suosittelen lämpimästi!",
+                estrellas: 5,
+                fecha: "1 kuukausi sitten",
+                servicio: "Ravintolasiivous"
+            },
+            {
+                cliente: "Fitness24Seven",
+                tipo: "Kuntosaliketju",
+                comentario: "Kuntosalin puhtaus on äärimmäisen tärkeää asiakkaillemme. Nordic Globe hoitaa tehtävänsä erinomaisesti ja joustavasti. Asiakaspalaute on ollut pelkästään positiivista!",
+                estrellas: 5,
+                fecha: "3 viikkoa sitten",
+                servicio: "Kuntosalisiivous"
+            },
+            {
+                cliente: "Asunto Oy Keskusta",
+                tipo: "Taloyhtiö",
+                comentario: "Portaiden ja yleistasten siivous on ollut moitteetonta. Henkilökunta on ystävällistä ja huomioi asukkaiden toiveet. Hinta-laatusuhde on erinomainen!",
+                estrellas: 4.8,
+                fecha: "1 viikko sitten",
+                servicio: "Porrassiivous"
+            },
+            {
+                cliente: "TechOffice Oy",
+                tipo: "IT-yritys",
+                comentario: "Toimistomme on aina siisti ja tervetuleva. Nordic Globe toimii joustavasti ja häiritsee työtämme minimaalisesti. Paras valinta toimistosiivoukseen!",
+                estrellas: 5,
+                fecha: "2 päivää sitten",
+                servicio: "Toimistosiivous"
+            },
+            {
+                cliente: "Lasikeskus Helsinki",
+                tipo: "Liiketila",
+                comentario: "Ikkunoidemme pesu on kriittistä liiketoiminnallemme. Nordic Globe tekee työn niin hyvin, että ikkunat näyttävät näkymättömiltä. Huippupalvelua!",
+                estrellas: 5,
+                fecha: "1 kuukausi sitten",
+                servicio: "Ikkunapesu"
+            }
+        ];
+
+        let currentIndex = 0;
+        let isAnimating = false;
+
+        // Función para generar estrellas
+        function generateStars(rating) {
+            let starsHTML = '';
+            const fullStars = Math.floor(rating);
+            const hasHalfStar = rating % 1 !== 0;
+
+            for (let i = 0; i < fullStars; i++) {
+                starsHTML += '<span class="star">★</span>';
+            }
+
+            if (hasHalfStar) {
+                starsHTML += '<span class="star">★</span>';
+            }
+
+            const emptyStars = 5 - Math.ceil(rating);
+            for (let i = 0; i < emptyStars; i++) {
+                starsHTML += '<span class="star empty">★</span>';
+            }
+
+            return starsHTML;
+        }
+
+        // Función para obtener las iniciales del cliente
+        function getInitials(name) {
+            const words = name.split(' ');
+            if (words.length >= 2) {
+                return words[0][0] + words[1][0];
+            }
+            return name[0] + (name[1] || '');
+        }
+
+        // Función para crear una tarjeta de review
+        function createReviewCard(review, index) {
+            const card = document.createElement('div');
+            card.className = `review-card ${index === 0 ? 'active' : ''}`;
+            card.innerHTML = `
+                <div class="review-header">
+                    <div class="company-logo">${getInitials(review.cliente)}</div>
+                    <div class="company-info">
+                        <div class="company-name">${review.cliente}</div>
+                        <div class="company-type">${review.tipo}</div>
+                    </div>
+                </div>
+                <div class="stars">
+                    ${generateStars(review.estrellas)}
+                </div>
+                <div class="review-text">
+                    "${review.comentario}"
+                </div>
+                <div class="review-footer">
+                    <div class="service-tag">
+                        <span class="service-icon">✓</span>
+                        ${review.servicio}
+                    </div>
+                    <div class="review-date">
+                        <span>🕐</span>
+                        ${review.fecha}
+                    </div>
+                </div>
+            `;
+            return card;
+        }
+
+        // Función para crear los dots de navegación
+        function createDots() {
+            const dotsContainer = document.getElementById('carouselDots');
+            dotsContainer.innerHTML = '';
+            
+            reviews.forEach((_, index) => {
+                const dot = document.createElement('div');
+                dot.className = `dot ${index === 0 ? 'active' : ''}`;
+                dot.addEventListener('click', () => goToSlide(index));
+                dotsContainer.appendChild(dot);
+            });
+        }
+
+        // Función para actualizar los dots
+        function updateDots() {
+            const dots = document.querySelectorAll('.dot');
+            dots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentIndex);
+            });
+        }
+
+        // Función para ir a un slide específico
+        function goToSlide(index) {
+            if (isAnimating || index === currentIndex) return;
+            
+            isAnimating = true;
+            const cards = document.querySelectorAll('.review-card');
+            const direction = index > currentIndex ? 'next' : 'prev';
+            
+            // Remover clase active del slide actual
+            cards[currentIndex].classList.remove('active');
+            if (direction === 'next') {
+                cards[currentIndex].classList.add('prev');
+            }
+            
+            // Actualizar índice
+            currentIndex = index;
+            
+            // Activar nuevo slide
+            setTimeout(() => {
+                cards.forEach((card, i) => {
+                    card.classList.remove('active', 'prev');
+                    if (i === currentIndex) {
+                        card.classList.add('active');
+                    }
+                });
+                updateDots();
+                isAnimating = false;
+            }, 50);
+        }
+
+        // Función para ir al siguiente slide
+        function nextSlide() {
+            const nextIndex = (currentIndex + 1) % reviews.length;
+            goToSlide(nextIndex);
+        }
+
+        // Función para ir al slide anterior
+        function prevSlide() {
+            const prevIndex = (currentIndex - 1 + reviews.length) % reviews.length;
+            goToSlide(prevIndex);
+        }
+
+        // Inicializar el carousel
+        function initCarousel() {
+            const carousel = document.getElementById('reviewsCarousel');
+            
+            // Crear todas las tarjetas
+            reviews.forEach((review, index) => {
+                const card = createReviewCard(review, index);
+                carousel.appendChild(card);
+            });
+            
+            // Crear dots
+            createDots();
+            
+            // Event listeners para los botones
+            document.getElementById('prevBtn').addEventListener('click', prevSlide);
+            document.getElementById('nextBtn').addEventListener('click', nextSlide);
+            
+            // Auto-play (opcional)
+            let autoPlayInterval = setInterval(nextSlide, 5000);
+            
+            // Pausar auto-play al hacer hover
+            carousel.addEventListener('mouseenter', () => {
+                clearInterval(autoPlayInterval);
+            });
+            
+            carousel.addEventListener('mouseleave', () => {
+                autoPlayInterval = setInterval(nextSlide, 5000);
+            });
+            
+            // Soporte para gestos táctiles (mobile)
+            let touchStartX = 0;
+            let touchEndX = 0;
+            
+            carousel.addEventListener('touchstart', (e) => {
+                touchStartX = e.changedTouches[0].screenX;
+            });
+            
+            carousel.addEventListener('touchend', (e) => {
+                touchEndX = e.changedTouches[0].screenX;
+                handleSwipe();
+            });
+            
+            function handleSwipe() {
+                if (touchEndX < touchStartX - 50) {
+                    nextSlide();
+                }
+                if (touchEndX > touchStartX + 50) {
+                    prevSlide();
+                }
+            }
+            
+            // Soporte para teclado
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowLeft') {
+                    prevSlide();
+                } else if (e.key === 'ArrowRight') {
+                    nextSlide();
+                }
+            });
+        }
+
+        // Inicializar cuando el DOM esté listo
+        document.addEventListener('DOMContentLoaded', initCarousel);
+    </script>
+</body>
+</html>
+

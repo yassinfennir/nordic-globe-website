@@ -1,0 +1,31 @@
+{
+  "name": "nordic-globe-website",
+  "version": "1.0.0",
+  "description": "Página web profesional para Nordic Globe - Servicios de Limpieza",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx http-server -p 3000 -o",
+    "dev": "npx live-server --port=3000 --open=/index.html",
+    "build": "echo 'No build process needed for static site'",
+    "deploy": "echo 'Ready to deploy to Netlify, Vercel, or GitHub Pages'"
+  },
+  "keywords": [
+    "limpieza",
+    "servicios",
+    "empresa",
+    "web",
+    "profesional",
+    "nordic-globe"
+  ],
+  "author": "Nordic Globe",
+  "license": "MIT",
+  "devDependencies": {
+    "http-server": "^14.1.1",
+    "live-server": "^1.2.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nordic-globe/website"
+  },
+  "homepage": "https://nordic-globe.com"
+}

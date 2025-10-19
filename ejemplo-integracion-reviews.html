@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nordic Globe - Ejemplo de Integración</title>
+    
+    <!-- Estilos de tu página existente -->
+    <link rel="stylesheet" href="styles.css">
+    
+    <!-- Estilos del carousel de reviews -->
+    <link rel="stylesheet" href="reviews-carousel.css">
+    
+    <style>
+        /* Estilos adicionales para esta página de ejemplo */
+        body {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .hero-section {
+            text-align: center;
+            padding: 80px 20px 40px;
+            color: white;
+        }
+
+        .hero-title {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .hero-subtitle {
+            font-size: 20px;
+            color: #b0b0b0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Tu contenido existente -->
+    <div class="hero-section">
+        <h1 class="hero-title">Nordic Globe</h1>
+        <p class="hero-subtitle">Siivouspalvelut Suomessa</p>
+    </div>
+
+    <!-- SECCIÓN DE REVIEWS - SOLO AGREGA ESTE DIV -->
+    <div class="ng-reviews-section" id="nordicReviewsCarousel"></div>
+
+    <!-- Más contenido de tu página... -->
+
+    <!-- Script del carousel -->
+    <script src="reviews-carousel.js"></script>
+
+    <!-- O si prefieres inicializar manualmente con opciones personalizadas: -->
+    <script>
+        // Inicialización manual (opcional)
+        // new NordicReviewsCarousel('nordicReviewsCarousel', {
+        //     reviews: nordicGlobeReviews, // Define tus propios reviews o usa los por defecto
+        //     autoPlay: true,
+        //     autoPlayInterval: 5000,
+        //     showDots: true,
+        //     showNavButtons: true,
+        //     enableKeyboard: true,
+        //     enableTouch: true
+        // });
+    </script>
+</body>
+</html>
+
